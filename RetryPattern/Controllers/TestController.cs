@@ -18,7 +18,7 @@ namespace RetryPattern.Controllers
                 .Handle<Exception>()
                 .WaitAndRetryAsync(5, retryAttempt => {
                     Console.WriteLine($"Attempt {retryAttempt} failed. Waiting 2 seconds");
-                    return TimeSpan.FromSeconds(2);
+                    return TimeSpan.FromSeconds(4);
                 });
 
             _circuitBreakerPolicy = Policy.Handle<Exception>()
@@ -37,7 +37,14 @@ namespace RetryPattern.Controllers
         public async Task<string> GetHelloMessageAsync()
         {
             Console.WriteLine("GetHelloMessage running");
-            return await _retryPolicy.ExecuteAsync(Hello);
+            try
+            {
+                return await _retryPolicy.ExecuteAsync(Hello);
+            }
+            catch
+            {
+                return "Fail";
+            }
         }
 
         [HttpGet("[action]")]
@@ -63,7 +70,7 @@ namespace RetryPattern.Controllers
         {
             var diceRoll = new Random().Next(0, 10);
 
-            if (diceRoll > 5)
+            if (diceRoll > -1)
             {
                 Console.WriteLine("ERROR! Throwing Exception");
                 throw new Exception("Exception");
