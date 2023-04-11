@@ -70,7 +70,7 @@ namespace RetryPattern.Controllers
         {
             var diceRoll = new Random().Next(0, 10);
 
-            if (diceRoll > -1)
+            if (diceRoll > 5)
             {
                 Console.WriteLine("ERROR! Throwing Exception");
                 throw new Exception("Exception");
